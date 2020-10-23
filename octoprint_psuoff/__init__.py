@@ -349,9 +349,9 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
         self._logger.debug("Switching PSU Off Using GPIO: %s" % self.onoffGPIOPin)
         if not self.invertonoffGPIOPin:
-            pin_output=GPIO.LOW
-        else:
             pin_output=GPIO.HIGH
+        else:
+            pin_output=GPIO.LOW
 
         try:
             GPIO.output(self._gpio_get_pin(self.onoffGPIOPin), pin_output)
@@ -366,6 +366,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
     def get_api_commands(self):
         return dict(
+            turnoffPSU=[],
             turnPSUOff=[],
             getPSUState=[]
         )

@@ -41,6 +41,19 @@ $(function() {
             self.isPSUOn(data.isPSUOn);
         };
 
+        self.turnoffPSU = function() {
+			if (self.settings.plugins.psucontroltb.enablePowerOffWarningDialog()) {
+				showConfirmationDialog({
+					message: "You are about to turn off the PSU.",
+					onproceed: function() {
+						self.turnPSUOff();
+					}
+				});
+			} else {
+				self.turnPSUOff();
+			}
+        };
+
     	self.turnPSUOff = function() {
             $.ajax({
                 url: API_BASEURL + "plugin/psuoff",
