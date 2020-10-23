@@ -42,7 +42,7 @@ $(function() {
         };
 
         self.turnoffPSU = function() {
-			if (self.settings.plugins.psucontrol.enablePowerOffWarningDialog()) {
+			if (self.settings.plugins.psuoff.enablePowerOffWarningDialog()) {
 				showConfirmationDialog({
 					message: "You are about to turn off the PSU.",
 					onproceed: function() {
