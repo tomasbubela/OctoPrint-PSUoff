@@ -88,7 +88,6 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         self.GPIOMode = ''
         self.onoffGPIOPin = 0
         self.invertonoffGPIOPin = False
-        self.postOnDelay = 0.0
         self.autoOn = False
         self.enablePowerOffWarningDialog = True
         self.powerOffWhenIdle = False
@@ -97,8 +96,6 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         self._idleIgnoreCommandsArray = []
         self.idleTimeoutWaitTemp = 0
         self.isPSUOn = False
-        self._check_psu_state_thread = None
-        self._check_psu_state_event= threading.Event()
         self._idleTimer = None
         self._waitForHeaters = False
         self._skipIdleTimer = False
@@ -114,9 +111,6 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
         self.invertonoffGPIOPin = self._settings.get_boolean(["invertonoffGPIOPin"])
         self._logger.debug("invertonoffGPIOPin: %s" % self.invertonoffGPIOPin)
-
-        self.postOnDelay = self._settings.get_float(["postOnDelay"])
-        self._logger.debug("postOnDelay: %s" % self.postOnDelay)
 
         self.enablePowerOffWarningDialog = self._settings.get_boolean(["enablePowerOffWarningDialog"])
         self._logger.debug("enablePowerOffWarningDialog: %s" % self.enablePowerOffWarningDialog)
@@ -136,11 +130,9 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
         self._configure_gpio()
 
-        self._check_psu_state_thread = threading.Thread(target=self._check_psu_state)
-        self._check_psu_state_thread.daemon = True
-        self._check_psu_state_thread.start()
-
         self._start_idle_timer()
+        
+        self._logger.debug("Start OK")
 
     def _gpio_board_to_bcm(self, pin):
         if GPIO.RPI_REVISION == 1:
@@ -208,27 +200,6 @@ class PSUoff(octoprint.plugin.StartupPlugin,
             self._configuredGPIOPins.append(self.onoffGPIOPin)
         except (RuntimeError, ValueError) as e:
             self._logger.error(e)
-
-    def check_psu_state(self):
-        self._check_psu_state_event.set()
-
-    def _check_psu_state(self):
-        while True:
-            old_isPSUOn = self.isPSUOn
-
-            self.isPSUOn = self._noSensing_isPSUOn
-            
-            self._logger.debug("isPSUOn: %s" % self.isPSUOn)
-
-            if (old_isPSUOn != self.isPSUOn) and self.isPSUOn:
-                self._start_idle_timer()
-            elif (old_isPSUOn != self.isPSUOn) and not self.isPSUOn:
-                self._stop_idle_timer()
-
-            self._plugin_manager.send_plugin_message(self._identifier, dict(hasGPIO=self._hasGPIO, isPSUOn=self.isPSUOn))
-
-            self._check_psu_state_event.wait(self.sensePollingInterval)
-            self._check_psu_state_event.clear()
 
     def _start_idle_timer(self):
         self._stop_idle_timer()
@@ -358,11 +329,8 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         except (RuntimeError, ValueError) as e:
             self._logger.error(e)
 
-        if self.sensingMethod not in ('GPIO','SYSTEM'):
-            self._noSensing_isPSUOn = False
+        self._noSensing_isPSUOn = False
                     
-        time.sleep(0.1)
-        self.check_psu_state()
 
     def get_api_commands(self):
         return dict(
@@ -390,7 +358,6 @@ class PSUoff(octoprint.plugin.StartupPlugin,
             GPIOMode = 'BOARD',
             onoffGPIOPin = 0,
             invertonoffGPIOPin = False,
-            postOnDelay = 0.0,
             enablePowerOffWarningDialog = True,
             powerOffWhenIdle = False,
             idleTimeout = 30,
@@ -407,7 +374,6 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         self.GPIOMode = self._settings.get(["GPIOMode"])
         self.onoffGPIOPin = self._settings.get_int(["onoffGPIOPin"])
         self.invertonoffGPIOPin = self._settings.get_boolean(["invertonoffGPIOPin"])
-        self.postOnDelay = self._settings.get_float(["postOnDelay"])
         self.powerOffWhenIdle = self._settings.get_boolean(["powerOffWhenIdle"])
         self.idleTimeout = self._settings.get_int(["idleTimeout"])
         self.idleIgnoreCommands = self._settings.get(["idleIgnoreCommands"])
