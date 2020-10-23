@@ -6,7 +6,7 @@ import setuptools
 plugin_identifier = "psuoff"
 plugin_package = "octoprint_%s" % plugin_identifier
 plugin_name = "OctoPrint-PSUoff"
-plugin_version = "1.4.0"
+plugin_version = "1.6.0"
 plugin_description = "Pro vypinani napajeni tiskarny a soucasne i Raspberry. Odvozeno z pluginu PSUControl od Shawn Bruce"
 plugin_author = "Tomas Bubela"
 plugin_author_email = ""
