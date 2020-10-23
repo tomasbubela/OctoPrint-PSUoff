@@ -60,7 +60,7 @@ $(function() {
                 type: "POST",
                 dataType: "json",
                 data: JSON.stringify({
-                    command: "turnPSUOff"
+                    command: "turn_psu_off"
                 }),
                 contentType: "application/json; charset=UTF-8"
             })

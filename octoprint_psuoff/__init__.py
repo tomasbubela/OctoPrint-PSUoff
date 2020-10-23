@@ -332,6 +332,14 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         except (RuntimeError, ValueError) as e:
             self._logger.error(e)
 
+        # vypnutí Raspberry
+        self._logger.info("Shutdown system")
+        try:
+            os.system("sudo shutdown -h now")
+        except:
+            e = sys.exc_info()[0]
+        self._logger.exception("Error executing shutdown command")
+
         self._noSensing_isPSUOn = False
                     
 
