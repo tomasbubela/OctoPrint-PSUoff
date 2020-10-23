@@ -366,8 +366,8 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
     def get_api_commands(self):
         return dict(
-            turnoffPSU=[],
             turnPSUOff=[],
+            turnoffPSU=[],
             getPSUState=[]
         )
 
@@ -378,6 +378,8 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         if not user_permission.can():
             return make_response("Insufficient rights", 403)
         
+        if command == 'turnoffPSU':
+            self.turn_psu_off()
         elif command == 'turnPSUOff':
             self.turn_psu_off()
         elif command == 'getPSUState':

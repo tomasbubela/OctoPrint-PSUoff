@@ -10,7 +10,7 @@ plugin_version = "1.1.0"
 plugin_description = "Pro vypinani napajeni tiskarny a soucasne i Raspberry. Odvozeno z pluginu PSUControl od Shawn Bruce"
 plugin_author = "Tomas Bubela"
 plugin_author_email = ""
-plugin_url = "https://github.com/tomasbubela"
+plugin_url = "https://github.com/tomasbubela/OctoPrint-PSUoff"
 plugin_license = "AGPLv3"
 plugin_additional_data = []
 
