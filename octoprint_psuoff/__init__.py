@@ -204,7 +204,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
     def _start_idle_timer(self):
         self._stop_idle_timer()
         
-        if self.powerOffWhenIdle and self.isPSUOn:
+        if self.powerOffWhenIdle:
             self._idleTimer = ResettableTimer(self.idleTimeout * 60, self._idle_poweroff)
             self._idleTimer.start()
 
@@ -224,12 +224,15 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
     def _idle_poweroff(self):
         if not self.powerOffWhenIdle:
+            self._logger.debug("cekani 1")
             return
         
         if self._waitForHeaters:
+            self._logger.debug("cekani 2")
             return
         
         if self._printer.is_printing() or self._printer.is_paused():
+            self._logger.debug("cekani 3")
             return
 
         self._logger.info("Idle timeout reached after %s minute(s). Turning heaters off prior to shutting off PSU." % self.idleTimeout)
