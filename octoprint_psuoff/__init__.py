@@ -90,6 +90,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         self.invertonoffGPIOPin = False
         self.autoOn = False
         self.enablePowerOffWarningDialog = True
+        self.shutdownOnPowerOff = True
         self.powerOffWhenIdle = False
         self.idleTimeout = 0
         self.idleIgnoreCommands = ''
@@ -114,6 +115,9 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
         self.enablePowerOffWarningDialog = self._settings.get_boolean(["enablePowerOffWarningDialog"])
         self._logger.debug("enablePowerOffWarningDialog: %s" % self.enablePowerOffWarningDialog)
+
+        self.shutdownOnPowerOff = self._settings.get_boolean(["shutdownOnPowerOff"])
+        self._logger.debug("shutdownOnPowerOff: %s" % self.shutdownOnPowerOff)
 
         self.powerOffWhenIdle = self._settings.get_boolean(["powerOffWhenIdle"])
         self._logger.debug("powerOffWhenIdle: %s" % self.powerOffWhenIdle)
@@ -334,12 +338,13 @@ class PSUoff(octoprint.plugin.StartupPlugin,
             self._logger.error(e)
 
         # vypnutí Raspberry
-        self._logger.info("Shutdown system")
-        try:
-            os.system("sudo shutdown -h now")
-        except:
-            e = sys.exc_info()[0]
-        self._logger.exception("Error executing shutdown command")
+        if self.shutdownOnPowerOff:
+            self._logger.info("Shutdown system")
+            try:
+                os.system("sudo shutdown -h now")
+            except:
+                e = sys.exc_info()[0]
+                self._logger.error("Error executing shutdown command")
 
         self._noSensing_isPSUOn = False
                     
@@ -371,6 +376,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
             onoffGPIOPin = 0,
             invertonoffGPIOPin = False,
             enablePowerOffWarningDialog = True,
+            shutdownOnPowerOff = True,
             powerOffWhenIdle = False,
             idleTimeout = 30,
             idleIgnoreCommands = 'M105',
@@ -386,6 +392,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         self.GPIOMode = self._settings.get(["GPIOMode"])
         self.onoffGPIOPin = self._settings.get_int(["onoffGPIOPin"])
         self.invertonoffGPIOPin = self._settings.get_boolean(["invertonoffGPIOPin"])
+        self.shutdownOnPowerOff = self._settings.get_boolean(["shutdownOnPowerOff"])
         self.powerOffWhenIdle = self._settings.get_boolean(["powerOffWhenIdle"])
         self.idleTimeout = self._settings.get_int(["idleTimeout"])
         self.idleIgnoreCommands = self._settings.get(["idleIgnoreCommands"])
