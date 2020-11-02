@@ -222,6 +222,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         except:
             self._start_idle_timer()
 
+    # Funkce vyvolaná po timeoutu od ResettableTimer
     def _idle_poweroff(self):
         if not self.powerOffWhenIdle:
             self._logger.debug("cekani 1")
@@ -238,7 +239,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         self._logger.info("Idle timeout reached after %s minute(s). Turning heaters off prior to shutting off PSU." % self.idleTimeout)
         if self._wait_for_heaters():
             self._logger.info("Heaters below temperature.")
-            self.turn_psu_off()
+            #TEST vypnutí se nespustí self.turn_psu_off()
         else:
             self._logger.info("Aborted PSU shut down due to activity.")
 
