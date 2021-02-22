@@ -322,17 +322,17 @@ class PSUoff(octoprint.plugin.StartupPlugin,
             self._logger.info("Waiting for heaters(%s) before shutting off PSU..." % ', '.join(heaters_above_waittemp))
             time.sleep(5)
 
-    # def hook_gcode_queuing(self, comm_instance, phase, cmd, cmd_type, gcode, *args, **kwargs):
-        # skipQueuing = False
+    def hook_gcode_queuing(self, comm_instance, phase, cmd, cmd_type, gcode, *args, **kwargs):
+        skipqueuing = false
 
-        # if gcode:
-            # if self.powerOffWhenIdle and self.isPSUOn and not self._skipIdleTimer:
-                # if not (gcode in self._idleIgnoreCommandsArray):
-                    # self._waitForHeaters = False
-                    # self._reset_idle_timer()
+        if gcode:
+            if self.poweroffwhenidle and self.ispsuon and not self._skipidletimer:
+                if not (gcode in self._idleignorecommandsarray):
+                    self._waitforheaters = false
+                    self._reset_idle_timer()
 
-            # if skipQueuing:
-                # return (None,)
+            if skipqueuing:
+                return (none,)
         
     def turn_psu_off(self):
         self._logger.info("Switching PSU Off")
