@@ -109,6 +109,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
     def on_event(self, event, payload):
         if event in ("PrintDone"):
             self.isFirstRun = False
+            self._start_idle_timer()
             self._logger.debug("PrintDone Event")
 
     def on_settings_initialized(self):
@@ -142,7 +143,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
         self._configure_gpio()
 
-        self._start_idle_timer()
+        #self._start_idle_timer()
         
         self._logger.debug("Start OK")
 
@@ -415,7 +416,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
 
         self._configure_gpio()
 
-        self._start_idle_timer()
+        #self._start_idle_timer()
 
     def get_settings_version(self):
         return 3
