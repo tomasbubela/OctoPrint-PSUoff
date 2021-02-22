@@ -102,13 +102,13 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         self._waitForHeaters = False
         self._skipIdleTimer = False
         self._configuredGPIOPins = []
-        self.isFirstRun = true
+        self.isFirstRun = True
 
 
     ##~~ EventHandlerPlugin
     def on_event(self, event, payload):
         if event in ("PrintDone"):
-            self.isFirstRun = false
+            self.isFirstRun = False
 
     def on_settings_initialized(self):
         self.GPIOMode = self._settings.get(["GPIOMode"])
@@ -238,6 +238,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         if self.isFirstRun:
             self._logger.debug("cekani 0")
             return        
+
         if not self.powerOffWhenIdle:
             self._logger.debug("cekani 1")
             return
