@@ -109,6 +109,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
     def on_event(self, event, payload):
         if event in ("PrintDone"):
             self.isFirstRun = False
+            self._logger.debug("PrintDone Event")
 
     def on_settings_initialized(self):
         self.GPIOMode = self._settings.get(["GPIOMode"])
@@ -255,6 +256,7 @@ class PSUoff(octoprint.plugin.StartupPlugin,
         if self._wait_for_heaters():
             self._logger.info("Heaters below temperature.")
             #TEST vypnutí se nespustí self.turn_psu_off()
+            self.turn_psu_off()
         else:
             self._logger.info("Aborted PSU shut down due to activity.")
 
