@@ -4,6 +4,7 @@ from __future__ import absolute_import
 __author__ = "Tomas Bubela"
 __license__ = "GNU Affero General Public License http://www.gnu.org/licenses/agpl.html"
 __copyright__ = "Copyright (C) 2020 Tomas Bubela - Released under terms of the AGPLv3 License"
+__plugin_pythoncompat__ = ">=2.7,<4"
 
 import octoprint.plugin
 from octoprint.server import user_permission
